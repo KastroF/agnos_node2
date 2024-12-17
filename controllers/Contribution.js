@@ -558,6 +558,7 @@ async function sendPushNotification(token, title, body, badge, data = {}) {
     });
 
     console.log("Notification envoyée avec succès :", response.data);
+    
   } catch (error) {
     console.error(
       "Erreur lors de l’envoi de la notification :",
@@ -602,6 +603,9 @@ exports.mypaygaCallback = (req, res) => {
           });
 
           for (let token of tokens) {
+            
+            console.log("on envoie bien ohhh"); 
+
             sendPushNotification(
               token,
               `Félicitatios`,
