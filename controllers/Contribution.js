@@ -506,7 +506,7 @@ exports.addContribution = async (req, res) => {
 const MY_PROJECT_ID = "agnos-575eb";
 const FCM_ENDPOINT = `https://fcm.googleapis.com/v1/projects/${MY_PROJECT_ID}/messages:send`;
 
-const SERVICE_ACCOUNT_KEY_FILE = "../my-service-account.json";
+const SERVICE_ACCOUNT_KEY_FILE = "./my-service-account.json";
 
 
 
