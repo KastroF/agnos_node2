@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
   fcmToken: {type: Array},
   description: {type: String},
   phone: {type: String}, 
+  date: {type: Date},
   certified: {type: Boolean}
                                    
 })

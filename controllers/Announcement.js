@@ -127,7 +127,7 @@ exports.addNew = (req, res) => {
     
     newAnnouncement.save().then(async () => {
       
-        const annonces = await Announcement.find({active: true}).sort({date: -1}).limit(10); 
+        const annonces = await Announcement.find({active: true}).sort({created_date: -1}).limit(10); 
       
         for(let annonce of annonces){
 
@@ -263,7 +263,7 @@ exports.getAnnonces = (req, res) => {
   
    
   
-    Announcement.find({active: true}).sort({date: -1}).skip(req.body.startAt).limit(10).then(async (annonces) => {
+    Announcement.find({active: true}).sort({created_date: -1}).skip(req.body.startAt).limit(10).then(async (annonces) => {
       
        for(let annonce of annonces){
 
