@@ -418,7 +418,7 @@ exports.addContribution = async (req, res) => {
       urls: {
         success_url: "http://chronickl-response.epizy.com/success.html",
         callback_url:
-          "https://users-auth.glitch.me/api/contribution/mypaygacallback",
+          "https://agnos-de606f12db62.herokuapp.com/api/contribution/mypaygacallback",
         fail_url: "http://chronickl-response.epizy.com/echec.html",
       },
       apikey: api_gab,
