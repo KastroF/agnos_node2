@@ -558,7 +558,7 @@ async function sendPushNotification(token, title, body, badge, data = {}) {
     });
 
     console.log("Notification envoyée avec succès :", response.data);
-    
+
   } catch (error) {
     console.error(
       "Erreur lors de l’envoi de la notification :",
@@ -568,7 +568,9 @@ async function sendPushNotification(token, title, body, badge, data = {}) {
 }
 
 exports.mypaygaCallback = (req, res) => {
-  console.log(req.body);
+  
+    console.log(req.body);
+    console.log("Le bonjour");
 
   Contribution.updateOne(
     { payment_token: req.body.payment_token },
