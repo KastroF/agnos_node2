@@ -196,6 +196,11 @@ exports.signUp = async (req, res) => {
         if (user) {
           
           if(user.userActive){
+
+            if(!user.appleId){
+          
+                await User.updateOne({_id: user._id}, {$set: {appleId: req.body.appleId}})
+            }
             
           console.log("on est ok");
           res
@@ -226,6 +231,7 @@ exports.signUp = async (req, res) => {
             email: req.body.email,
             password: hash,
             status: "pers",
+            appleId: req.body.appleId,
             active: true,
             userActive: true
           });
@@ -304,6 +310,51 @@ exports.signUp = async (req, res) => {
     res.status(505).json({ err: e });
   }
 };
+
+
+exports.connectWithApple = (req, res) => {
+
+
+
+    User.findOne({appleId: req.body.user}).then((user) => {
+
+        if(user){
+
+
+            if(user.userActive){
+            
+                console.log("on est ok");
+                res
+                  .status(201)
+                  .json({
+                    status: 0,
+                    user,
+                    token: jwt.sign(
+                      { userId: user._id },
+                      "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                    ),
+                  });
+                  
+                }else{
+                  
+                   res.status(200)
+                    .json({ status: 2, message: "Email ou mot de passe incorrect" });
+                }
+
+
+        }else{
+
+            res.status(200)
+            .json({ status: 2, message: "Email ou mot de passe incorrect" });
+
+        }
+
+    }, (err) => {
+
+            console.log(err); 
+            res.status(505).json({err});
+    })
+}
 
 exports.getPendings  = (req, res) => {
   

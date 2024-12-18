@@ -15,6 +15,7 @@ router.get("/getuser", auth, userCtrl.getUser);
 router.post("/removefcmtoken", auth, userCtrl.removeFcmToken); 
 router.get("/updateuser", auth, userCtrl.updateUser);
 router.get("/deleteuser", auth, userCtrl.deleteUser);
+router.post("/connectwithapple", userCtrl.connectWithApple);
 
 
 
