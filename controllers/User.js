@@ -190,6 +190,68 @@ exports.signUp = async (req, res) => {
           });
       }
     } else if (req.body.type === "apple") {
+
+        const user = await User.findOne({ email: req.body.email });
+
+        if (user) {
+          
+          if(user.userActive){
+            
+          console.log("on est ok");
+          res
+            .status(201)
+            .json({
+              status: 0,
+              user,
+              token: jwt.sign(
+                { userId: user._id },
+                "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+              ),
+            });
+            
+          }else{
+            
+             res.status(200)
+              .json({ status: 2, message: "Email ou mot de passe incorrect" });
+          }
+          
+  
+        } else {
+          console.log("on n'est pas ok");
+  
+          const hash = await bcrypt.hash(req.body.password, 10);
+  
+          newUser = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: hash,
+            status: "pers",
+            active: true,
+            userActive: true
+          });
+  
+          newUser
+            .save()
+            .then(async (userr) => {
+              const lastUser = await User.findOne({ _id: userr._id });
+  
+              res
+                .status(201)
+                .json({
+                  status: 0,
+                  user: lastUser,
+                  token: jwt.sign(
+                    { userId: userr._id },
+                    "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                  ),
+                });
+            })
+            .catch((error) => {
+              res.status(402).json({ status: 505, error: error.message });
+  
+              console.log(error);
+            });
+        }
       
       
     } else {
