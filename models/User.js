@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
   description: {type: String},
   phone: {type: String}, 
   date: {type: Date},
-  certified: {type: Boolean}
+  certified: {type: Boolean}, 
+  appleId: {type: String}
                                    
 })
 
