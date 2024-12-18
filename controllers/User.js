@@ -196,8 +196,12 @@ exports.signUp = async (req, res) => {
         if (user) {
           
           if(user.userActive){
+  
+            console.log("1 de 2");
 
             if(!user.appleId){
+
+                console.log("1 de 2", req.body.appleId);
           
                 await User.updateOne({_id: user._id}, {$set: {appleId: req.body.appleId}})
             }
