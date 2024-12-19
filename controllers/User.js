@@ -84,28 +84,45 @@ exports.signIn = async (req, res) => {
          // const hash = await bcrypt.hash(req.body.password, 10);
           
          // await User.updateOne({_id: user._id}, {$set: {password: hash}});
-          
-          const compare = await bcrypt.compare(
-            req.body.password,
-            user.password
-          );
+          if(req.body.type === "google"){
 
-          if (compare) {
             res
-              .status(200)
-              .json({
-                status: 0,
-                user,
-                token: jwt.sign(
-                  { userId: user._id },
-                  "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
-                ),
-              });
-          } else {
-            res
-              .status(200)
-              .json({ status: 2, message: "Email ou mot de passe incorrect" });
+            .status(200)
+            .json({
+              status: 0,
+              user,
+              token: jwt.sign(
+                { userId: user._id },
+                "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+              ),
+            });
+
+          }else{
+
+            const compare = await bcrypt.compare(
+                req.body.password,
+                user.password
+              );
+    
+              if (compare) {
+                    res
+                  .status(200)
+                  .json({
+                    status: 0,
+                    user,
+                    token: jwt.sign(
+                      { userId: user._id },
+                      "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                    ),
+                  });
+              } else {
+                res
+                  .status(200)
+                  .json({ status: 2, message: "Email ou mot de passe incorrect" });
+              }
+
           }
+
         } else {
              console.log("pas de user tu es fou");
             res.status(200)
