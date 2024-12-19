@@ -567,6 +567,182 @@ async function sendPushNotification(token, title, body, badge, data = {}) {
   }
 }
 
+exports.initMobileMoney = (req, res) => {
+  
+    //console.log("On a initié");
+  
+    const contribution = new Contribution({
+      userId: req.auth.userId,
+      amount: req.body.amount,
+      giverName: req.body.giverName,
+      fees: req.body.fees,
+      announcementId: req.body._id,
+      referenceId: req.body.unique_id,
+      timeout: 100000,
+      countryCode: req.body.country,
+      date: new Date(),
+      clientPhone: req.body.client_phone,
+      meansOfPayments: req.body.moneyType,
+      status: "pending",
+      paid: "initial",
+    });
+  
+    contribution
+      .save()
+      .then((trans) => {
+        console.log(trans);
+  
+        const data = JSON.stringify({
+          amount: req.body.amount2,
+          short_description: "Paiement mobile money d'un de nos utilisateurs ",
+          payer_email: "chronickl@test.com",
+          payer_name: "Agnos User",
+          payer_msisdn: req.body.client_phone,
+          external_reference: trans._id,
+          expiry_period: 2,
+        });
+  
+        const username = "chronicklSarl";
+        const shared_key = "dfecfc1e-ef0d-45a3-b3c3-e3f5889aa84a";
+  
+        //https://www.billing-easy.com/api/v1/merchant/e_bills
+  
+        // Request options
+        const options = {
+          hostname: "stg.billing-easy.com", // Replace with your API endpoint https://lab.billing-easy.net/api/v1/merchant/e_bills
+          path: "/api/v1/merchant/e_bills", // Replace with your API endpoint path
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+            Authorization: `Basic ${Buffer.from(
+              `${username}:${shared_key}`
+            ).toString("base64")}`, // En-tête d'authentification
+            "Content-Length": Buffer.byteLength(data),
+          },
+        };
+      
+      
+      
+  
+  
+        const sendRequest = (options, data) => {
+          return new Promise((resolve, reject) => {
+            const req = http.request(options, (ress) => {
+              let responseData = "";
+  
+              ress.on("data", (chunk) => {
+                responseData += chunk;
+              });
+              ress.on("end", () => {
+                resolve(responseData);
+              });
+            });
+            req.on("error", (error) => {
+              reject(error);
+            });
+            req.write(data);
+            req.end();
+          });
+        };
+  
+  
+      
+        sendRequest(options, data)
+          .then((responseData) => {
+            console.log(JSON.parse(responseData));
+            //console.log(JSON.parse(responseData).e_bill.bill_id);
+  
+            Contribution.findOne({ _id: trans._id })
+              .then((transact) => {
+                if (transact) {
+                  const bill_id = JSON.parse(responseData).e_bill.bill_id;
+  
+                  Contribution.updateOne(
+                    { _id: transact._id },
+                    {
+                      $set: {
+                        bill_id,
+                      },
+                    }
+                  )
+                    .then(async () => {
+                    
+                      console.log(bill_id); 
+                      console.log(req.body.moneyType); 
+                      console.log(req.body.client_phone);
+                    
+                    const path = `/api/v1/merchant/e_bills/${bill_id}/ussd_push`;
+                    
+                    console.log(path);
+                    
+                        const data2 = JSON.stringify({
+                            "payer_msisdn":req.body.client_phone,
+                            "payment_system_name" : req.body.moneyType === "AM" ? "airtelmoney" : "moovmoney4"
+                          });
+                      
+                        const options2 = {
+                          hostname: "stg.billing-easy.com", // Replace with your API endpoint https://lab.billing-easy.net/api/v1/merchant/e_bills
+                          path: path, // Replace with your API endpoint path
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            Accept: "application/json",
+                            Authorization: `Basic ${Buffer.from(
+                              `${username}:${shared_key}`
+                            ).toString("base64")}`, // En-tête d'authentification
+                            "Content-Length": Buffer.byteLength(data2),
+                          },
+                        };
+                    
+                    
+                        
+                    
+                    
+                        console.log()
+                      
+                        sendRequest(options2, data2)
+                          .then((responseData) => {
+                          
+                          console.log((responseData));
+                          
+                            console.log("Tout s'est bien passé");
+                          
+                             res.status(201).json({ status: 0, bill_id });
+                          
+                          
+                          
+                        }, (error) => {
+                            
+                            console.log(error);
+                           res.status(402).json({ error });
+                          
+                        })
+                      
+                    
+                     
+                    })
+                    .catch((error) => {
+                      res.status(402).json({ error });
+                      console.log(error);
+                    });
+                }
+              })
+              .catch((error) => { console.log(error); res.status(402).json({ error })   } );
+          })
+          .catch((error) => {
+            console.error("Erreur de requête :", error);
+             res.status(402).json({ error });
+          });
+      })
+      .catch((error) => {
+        console.log(error)
+        res.status(402).json({ error });
+      });
+  };
+
 exports.mypaygaCallback = (req, res) => {
   
     console.log(req.body);

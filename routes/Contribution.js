@@ -6,7 +6,7 @@ const contributionCtrl = require("../controllers/Contribution");
 
 const auth = require("../middleware/auth")
 
-router.post("/addcontribution", auth, contributionCtrl.addContribution);
+router.post("/addcontribution", auth, contributionCtrl.initMobileMoney);
 router.post("/mypaygacallback", contributionCtrl.mypaygaCallback);
 router.post("/getcontributions", auth, contributionCtrl.getContributions)
 router.post("/mypvitcallback", auth, contributionCtrl.myPvitCallback)
