@@ -180,6 +180,7 @@ exports.signUp = async (req, res) => {
           password: hash,
           profile: req.body.photo,
           status: "pers",
+          date: new Date(),
           active: true,
           userActive: true
         });
@@ -253,6 +254,7 @@ exports.signUp = async (req, res) => {
             password: hash,
             status: "pers",
             appleId: req.body.appleId,
+            date: new Date(),
             active: true,
             userActive: true
           });
@@ -299,6 +301,7 @@ exports.signUp = async (req, res) => {
           password: hash,
           status: req.body.status,
           active: req.body.status === "org" ? false : true,
+          date: new Date(),
           userActive: true
         });
 
