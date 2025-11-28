@@ -13,6 +13,6 @@ router.post("/mypvitcallback", auth, contributionCtrl.myPvitCallback)
 router.post("/addvisapayment", auth, contributionCtrl.initVisa); 
 router.post("/givememymoney", auth, contributionCtrl.giveMeMyMoney);
 router.post("/ebillingcallback", contributionCtrl.ebillingCallback);
-
+router.post("/addpayment", auth, contributionCtrl.addPayment);
 
 module.exports = router; 

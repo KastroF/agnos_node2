@@ -38,6 +38,44 @@ exports.getContributions = (req, res) => {
     );
 };
 
+
+exports.addPayment = async (req, res) => {
+
+  try{
+
+    const contribution = new Contribution({
+      userId: req.auth.userId,
+      amount: req.body.amount,
+      giverName: req.body.giverName,
+      fees: req.body.fees,
+      announcementId: req.body._id,
+      referenceId: req.body.unique_id,
+      timeout: 100000,
+      countryCode: req.body.country,
+      date: new Date(),
+      clientPhone: req.body.client_phone,
+      meansOfPayments: req.body.moneyType,
+      status: "pending",
+      paid: "initial",
+
+    });
+
+    await contribution.save(); 
+
+    res.status(201).json({status: 0});
+
+  }catch(err){
+
+    console.log(err);
+    res.status(505).json({ err });
+
+  }
+      
+
+
+
+}
+
 exports.giveMeMyMoney = async (req, res) => {
   console.log(req.body);
 
@@ -817,6 +855,39 @@ exports.mypaygaCallback = (req, res) => {
 exports.myPvitCallback = (req, res) => {
   console.log("c'est le retour pvit", req.body);
 };
+
+exports.callback = async (req, res) => {
+
+  console.log("Ebilling Callback", req.body);
+
+  try{
+
+     await Order.updateOne({paymentId: req.body.paymentId}, {$set: {status: "success"}}); 
+
+     const order = await Order.findOne({paymentId: req.body.paymentId}); 
+
+     const tokens = await DeviceToken.find({ userId: order.userId });
+
+
+     for (let t of tokens) {
+       await sendNotification({
+         token: t.token,
+         title: "Kredix",
+         body: `Félicitations, votre paiement s'est effectué avec succès, votre transaction vers le ${order.clientPhone} est en cours; Merci.`,
+         badge: 1,
+         data: {},
+       });
+     }
+
+     res.status(200).json({status: 0, message: "Thanks"})
+
+
+  }catch(err){
+
+      console.log(err); 
+      res.status(505).json({err})
+  }
+}
 
 exports.getStats = async (req, res) => {
   try {
