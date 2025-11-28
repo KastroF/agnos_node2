@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
      console.log(token);
      const decodedToken = await jwt.verify(
       token,
-      "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+      process.env.CODETOKEN
     );
     
     console.log(decodedToken);

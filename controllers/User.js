@@ -93,7 +93,7 @@ exports.signIn = async (req, res) => {
               user,
               token: jwt.sign(
                 { userId: user._id },
-                "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                process.env.CODETOKEN
               ),
             });
 
@@ -112,7 +112,7 @@ exports.signIn = async (req, res) => {
                     user,
                     token: jwt.sign(
                       { userId: user._id },
-                      "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                      process.env.CODETOKEN
                     ),
                   });
               } else {
@@ -158,7 +158,7 @@ exports.signUp = async (req, res) => {
             user,
             token: jwt.sign(
               { userId: user._id },
-              "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+              process.env.CODETOKEN
             ),
           });
           
@@ -197,7 +197,7 @@ exports.signUp = async (req, res) => {
                 user: lastUser,
                 token: jwt.sign(
                   { userId: userr._id },
-                  "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                  process.env.CODETOKEN
                 ),
               });
           })
@@ -232,7 +232,7 @@ exports.signUp = async (req, res) => {
               user,
               token: jwt.sign(
                 { userId: user._id },
-                "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                process.env.CODETOKEN
               ),
             });
             
@@ -271,7 +271,7 @@ exports.signUp = async (req, res) => {
                   user: lastUser,
                   token: jwt.sign(
                     { userId: userr._id },
-                    "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                    process.env.CODETOKEN
                   ),
                 });
             })
@@ -317,7 +317,7 @@ exports.signUp = async (req, res) => {
                 user: lastUser,
                 token: jwt.sign(
                   { userId: userr._id },
-                  "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                  process.env.CODETOKEN
                 ),
               });
           })
@@ -355,7 +355,7 @@ exports.connectWithApple = (req, res) => {
                     user,
                     token: jwt.sign(
                       { userId: user._id },
-                      "JxqKuulLNPCNfaHBpmOoalilgsdykhgugdolhebAqetflqRf"
+                      process.env.CODETOKEN
                     ),
                   });
                   

@@ -5,6 +5,7 @@ const fs = require("fs");
 const cors = require('cors');
 const path = require("path");
 const requestMap = new Map();
+require('dotenv').config();
 
 
 const app = express();
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
     next();
   });
 
-mongoose.connect("mongodb+srv://chronicklsarl89:sY1q7qgyb0TjBR3C@cluster0.rly8l.mongodb.net/agnos?retryWrites=true&w=majority",
+mongoose.connect(`mongodb+srv://chronicklsarl89:${process.env.MONGOPASS}@cluster0.rly8l.mongodb.net/agnos?retryWrites=true&w=majority`,
 
   { useNewUrlParser: true,
     useUnifiedTopology: true, autoIndex: true })
@@ -54,6 +55,7 @@ app.use((req, res, next) => {
   const notifRouter = require("./routes/Notifications");
   const announcementRouter = require("./routes/Announcement"); 
   const contributionRouter = require("./routes/Contribution"); 
+  const tokenRouter = require("./routes/DeviceToken");
   
 
   app.use("/api/user", userRouter);
@@ -61,6 +63,7 @@ app.use((req, res, next) => {
   app.use("/api/notif", notifRouter);
   app.use("/api/announcement", announcementRouter);
   app.use("/api/contribution", contributionRouter)
+  app.use("/api/token", tokenRouter);
 
 
 module.exports = app;

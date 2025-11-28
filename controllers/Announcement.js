@@ -204,7 +204,7 @@ exports.toModifyAnnonce = async (req, res) => {
         
     }
   
-    if(body && body !== {}){
+    if(body){
         
       await Announcement.updateOne({_id: req.body._id}, {$set: body});
       
