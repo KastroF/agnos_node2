@@ -110,7 +110,7 @@ exports.addNew = (req, res) => {
   
     if(req.file){
       
-      photoUrl = `${req.protocol}s://${req.get("host")}/images/${req.file.filename}`
+      photoUrl = req.file.path
         
     }
   
@@ -200,7 +200,7 @@ exports.toModifyAnnonce = async (req, res) => {
   
       if(req.file){
       
-        body = {...body, imageUrl: `${req.protocol}s://${req.get("host")}/images/${req.file.filename}`}
+        body = {...body, imageUrl: req.file.path}
         
     }
   

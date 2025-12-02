@@ -19,7 +19,7 @@ const storage = new CloudinaryStorage({
 const multerInstance = multer({ storage });
 
 const handleUpload = (req, res, next) => {
-  multerInstance.single('file')(req, res, function (err) {
+  multerInstance.single('image')(req, res, function (err) {
     if (err) {
       console.error('Erreur upload multer :', err);
       return res.status(400).json({ error: 'Échec de l’upload du fichier.', details: err.message });
