@@ -9,7 +9,7 @@ const announcementCtrl = require("../controllers/Announcement");
 
 const auth = require("../middleware/auth")
 
-router.post("/addnew", auth, handleUpload, announcementCtrl.getAnnonce); 
+router.post("/addnew", auth, handleUpload, announcementCtrl.addNew); 
 router.post("/getannonces", auth, announcementCtrl.getAnnonces);
 router.post('/getannonce', auth, announcementCtrl.getAnnonce);
 router.post("/modify", auth, handleUpload, announcementCtrl.toModifyAnnonce); 
