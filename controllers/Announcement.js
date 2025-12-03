@@ -311,6 +311,11 @@ exports.getAnnonce = async (req, res) => {
     try{
       
       const annonce = await Announcement.findOne({_id: req.body._id}); 
+
+      if(!annonce){
+
+          return res.status(400).json({message:"une erreur"})
+      }
       
       annonce.user = await User.findOne({_id: annonce.userId}); 
       
