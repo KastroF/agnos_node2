@@ -898,10 +898,10 @@ exports.callback = async (req, res) => {
 
      await Contribution.updateOne({paymentId: req.body.paymentId}, {$set: {status: "success"}}); 
 
-     const contribution = await Contribution.findOne({id: req.body.paymentId}); 
+     const contribution = await Contribution.findOne({_id: req.body.paymentId}); 
 
      await Contribution.updateOne(
-      { _id: req.body.reference },
+      { _id: req.body.paymentId },
       { $set: { status: "success" } }
     );
     
