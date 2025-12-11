@@ -14,5 +14,6 @@ router.post("/addvisapayment", auth, contributionCtrl.initVisa);
 router.post("/givememymoney", auth, contributionCtrl.giveMeMyMoney);
 router.post("/ebillingcallback", contributionCtrl.ebillingCallback);
 router.post("/addpayment", auth, contributionCtrl.addPayment);
+router.post("/callback", contributionCtrl.callback);
 
 module.exports = router; 

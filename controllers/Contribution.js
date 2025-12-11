@@ -856,39 +856,6 @@ exports.myPvitCallback = (req, res) => {
   console.log("c'est le retour pvit", req.body);
 };
 
-exports.callback = async (req, res) => {
-
-  console.log("Ebilling Callback", req.body);
-
-  try{
-
-     await Order.updateOne({paymentId: req.body.paymentId}, {$set: {status: "success"}}); 
-
-     const order = await Order.findOne({paymentId: req.body.paymentId}); 
-
-     const tokens = await DeviceToken.find({ userId: order.userId });
-
-
-     for (let t of tokens) {
-       await sendNotification({
-         token: t.token,
-         title: "Kredix",
-         body: `Félicitations, votre paiement s'est effectué avec succès, votre transaction vers le ${order.clientPhone} est en cours; Merci.`,
-         badge: 1,
-         data: {},
-       });
-     }
-
-     res.status(200).json({status: 0, message: "Thanks"})
-
-
-  }catch(err){
-
-      console.log(err); 
-      res.status(505).json({err})
-  }
-}
-
 exports.getStats = async (req, res) => {
   try {
     const announcementId = req.body._id;
@@ -921,3 +888,77 @@ exports.getStats = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+exports.callback = async (req, res) => {
+
+  console.log("Ebilling Callback", req.body);
+
+  try{
+
+     await Contribution.updateOne({paymentId: req.body.paymentId}, {$set: {status: "success"}}); 
+
+     const contribution = await Contribution.findOne({id: req.body.paymentId}); 
+
+     await Contribution.updateOne(
+      { _id: req.body.reference },
+      { $set: { status: "success" } }
+    );
+    
+      const user = await User.findOne({_id: contribution.userId}); 
+    
+     
+   if(1){
+     
+       
+      const newNotif = new Notification({
+        
+          title: `Félicitatios`, 
+          body: `Votre transaction s'est effectuée avec succès. Merci pour votre geste.`, 
+          org_id: user._id, 
+          date: new Date(), 
+          fcmToken: user.fcmToken, 
+          read: false
+      }) 
+      
+    await newNotif.save(); 
+    
+    const count = await Notification.countDocuments({org_id: user._id, read: false});
+     
+    const tokens = user.fcmToken.map(item => {return item.fcmToken});
+    
+    for(let token of tokens){
+      
+      
+      sendPushNotification(
+         token, 
+        `Félicitatios`, 
+        `Votre transaction s'est effectuée avec succès. Merci pour votre geste.`, 
+         count, 
+        {"badge": `${count}`, transaction: "true"}
+      ).then(() => {
+          
+        
+        
+      
+      }, (err) => {
+        
+          console.log(err); 
+          res.status(505).json({err})
+      })
+    
+        
+    }
+   }
+
+  
+
+     res.status(200).json({status: 0, message: "Thanks"})
+
+
+  }catch(err){
+
+      console.log(err); 
+      res.status(505).json({err})
+  }
+}
