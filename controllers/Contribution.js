@@ -57,6 +57,7 @@ exports.addPayment = async (req, res) => {
       meansOfPayments: req.body.moneyType,
       status: "pending",
       paid: "initial",
+      paymentId: req.body.paymentId, 
 
     });
 
@@ -896,9 +897,9 @@ exports.callback = async (req, res) => {
 
   try{
 
-     await Contribution.updateOne({payment_token: req.body.paymentId}, {$set: {status: "success"}}); 
+     await Contribution.updateOne({paymentId: req.body.paymentId}, {$set: {status: "success"}}); 
 
-     const contribution = await Contribution.findOne({payment_token: req.body.paymentId}); 
+     const contribution = await Contribution.findOne({paymentId: req.body.paymentId}); 
 
     
       const user = await User.findOne({_id: contribution.userId}); 

@@ -17,7 +17,7 @@ const contributionSchema = mongoose.Schema({
     status: {type: String},
     payment_token:  {type: String}, 
     pendingDate: {type: Date}, 
-    payment_token: {type: String}, 
+    paymentId : {type: String}, 
     bill_id:  {type: String}, 
 })
 
